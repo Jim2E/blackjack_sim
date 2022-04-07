@@ -1,6 +1,5 @@
 import random
 import numpy as np
-from sympy import false
 
 
 def newdeck():
