@@ -4,6 +4,8 @@ import numpy as np
 bal = 100
 quit_bal = 10
 ten_card = ['10','J','Q','K']
+val = {'A':11,'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9,'10':10,'J':10,'Q':10,'K':10}
+val2 = {'A':1,'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9,'10':10,'J':10,'Q':10,'K':10}
 
 def newdeck():
     deck = ['A','2','3','4','5','6','7','8','9','10','J','Q','K']
@@ -19,16 +21,59 @@ def start_deal(x):
         x.append(draw)
         td.remove(draw)
 
+def deal(x):
+    if not td or len(td)==0:
+            td = newdeck()
+    draw = random.sample(td,1)[0]
+    np.insert(x,-1,draw)
+    td.remove(draw)
+
+
 def blkjk(i):
     if 'A' in i and any(x in i for x in ten_card) and len(i)==2: return True
     else: return False
 
+def cval(x):
+    return val[x]
+
 def basic_strategy(player,dealer):
     double_card = False
+    phv = 0
+    plyr = np.array(player)
+    plyr_ace_count = np.where(plyr=='A')[0][1]
+
     dealer_upcard = dealer[0]
+    dhv = 0
+    dlr = np.array(dealer)
+    dlr_ace_count = np.where(dlr=='A')[0][1]
+
+    for i in range(len(player)):
+        phv += val[player[i]]
+
+    if len(plyr)==2 and len(set(plyr))==1:
+        double_card=True
+
+    if phv > 21 and plyr_ace_count >=1:
+        nphv = phv - 10*plyr_ace_count
+        nphv2 = phv - 10*(plyr_ace_count-1) 
+        if nphv > 21 and nphv2 > 21:
+            return 'bust'
+        elif nphv<=21 and nphv > dhv:
+            return 'win'
+        elif nphv2<=21 and nphv2 > dhv:
+            return 'win'
+        elif nphv==dhv or nphv2==dhv:
+
+    elif phv in [5,6,7,8] and not double_card:
+        deal(plyr)
+        basic_strategy(plyr,dlr)
+    elif phv==9 and dealer_upcard in ['2','7','8','9','10','J','Q','K']:
+
     
-    if 'A' not in p_hand and len(set(player))!=1:
-        p_hand = int(p_hand[0])+int(p_hand[1])
+    if 'A' not in player and len(set(player))!=1:
+        
+
+
     elif 'A' in p_hand and len(set(player))==2:
         p_hand = 2
 
@@ -52,7 +97,16 @@ while(bal > quit_bal):
         continue
 
     #implement basic strategy
-    decision = basic_strategy(p,d)
+    outcome = basic_strategy(p,d)
+
+    if outcome=='win':
+        bal += bet
+        continue
+    elif outcome=='push':
+        continue
+    else:
+        bal -=bet
+    
 
 
 
