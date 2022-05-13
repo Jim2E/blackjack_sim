@@ -1,6 +1,4 @@
-# blackjack_sim
-basic strategy simulation of blackjack
+# Basic Strategy Simulation for Blackjack
 
 
-! [chart] 
-(https://github.com/Jim2E/blackjack_sim/blob/main/basic-strategy-chart.gif)
+![chart](https://github.com/Jim2E/blackjack_sim/blob/main/basic-strategy-chart.gif)
